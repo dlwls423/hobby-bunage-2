@@ -16,7 +16,7 @@ public class State {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long stateId;
 
 	@Column(name = "do")
 	private String stateDo;
