@@ -58,16 +58,21 @@ public class UserService {
 	@Transactional
 	public UserProfileResponseDto updateUser(Long id, UserProfileRequestDto requestDto, User signInUser) {
 		validateId(id, signInUser.getId());
+		User saveUser = getUserEntity(id);
 		Optional<String> encodePasswordOrNull = PasswordCreator.createEncodePasswordOrNull(signInUser, requestDto,
 			passwordEncoder);
 
+		hobbyService.validateHobbyExistence(requestDto.getHobbyList().stream().map(Hobby::getHobbyName).toList());
+
+		saveUser.update(requestDto, encodePasswordOrNull.orElse(saveUser.getPassword()));
+		if(!saveUser.getHobbyList().isEmpty()) saveUser.getHobbyList().clear();
+
 		for(String hobbyName : requestDto.getHobbyList().stream().map(Hobby::getHobbyName).toList()){
-			hobbyService.findHobbyByHobbyName(hobbyName);
+			Hobby saveHobby = hobbyService.findHobbyByHobbyName(hobbyName);
+			saveUser.addHobby(saveHobby);
 		}
 
-		signInUser.update(requestDto, encodePasswordOrNull.orElse(signInUser.getPassword()));
-
-		return new UserProfileResponseDto(signInUser);
+		return new UserProfileResponseDto(saveUser);
 	}
 
 	private void verifyDuplicatedUser(UserRequestDto requestDto) {

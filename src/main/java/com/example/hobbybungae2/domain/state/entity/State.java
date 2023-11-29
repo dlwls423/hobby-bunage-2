@@ -42,4 +42,11 @@ public class State {
 		this.stateSi = stateSi;
 		this.stateGu = stateGu;
 	}
+
+	public void addPost(Post post){
+		this.postList.add(post);
+		if(post.getState() != this){
+			post.setState(this);
+		}
+	}
 }

@@ -6,6 +6,7 @@ import com.example.hobbybungae2.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,7 +29,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Hobby {
 
-	@OneToMany(mappedBy = "hobby")
+	@OneToMany(mappedBy = "hobby", cascade = CascadeType.REMOVE)
 	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -45,5 +46,19 @@ public class Hobby {
 	@Builder
 	public Hobby(String hobbyName) {
 		this.hobbyName = hobbyName;
+	}
+
+	public void setUser(User user){
+		this.user = user;
+		if(!user.getHobbyList().contains(this)){
+			user.getHobbyList().add(this);
+		}
+	}
+
+	public void addPostHobby(PostHobby postHobby){
+		this.postHobbyList.add(postHobby);
+		if(postHobby.getHobby() != this){
+			postHobby.setHobby(this);
+		}
 	}
 }

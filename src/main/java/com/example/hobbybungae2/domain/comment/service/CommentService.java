@@ -51,8 +51,7 @@ public class CommentService {
 		checkPost(comment, postId);
 		checkUser(comment, user.getIdName());
 
-		Post post = postService.getPostById(postId);
-		comment.update(requestDto, post);
+		comment.update(requestDto);
 		return new CommentResponseDto(comment);
 	}
 

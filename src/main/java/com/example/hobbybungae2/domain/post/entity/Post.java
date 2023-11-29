@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Post extends TimeStamp {
 
-	@OneToMany(mappedBy = "post")
+	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
 	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true) // 댓글은 게시글에 의해 관리됨
@@ -53,19 +53,37 @@ public class Post extends TimeStamp {
 	@Column(nullable = false, length = 500)
 	private String content;
 
-	public Post(PostRequestDto requestDto, User user){
+	public Post(PostRequestDto requestDto,State state, User user){
 		this.title = requestDto.getTitle();
 		this.content = requestDto.getContent();
-		this.state = requestDto.getState();
-		this.user = user;
-	}
-
-	public void setState(State state){
-		this.state = state;
+		setState(state);
+		setUser(user);
 	}
 
 	public void setUser(User user){
 		this.user = user;
+		if(!user.getPostList().contains(this))
+			user.getPostList().add(this);
+	}
+
+	public void setState(State state){
+		this.state = state;
+		if(!state.getPostList().contains(this))
+			state.getPostList().add(this);
+	}
+
+	public void addPostHobby(PostHobby postHobby){
+		this.postHobbyList.add(postHobby);
+		if(postHobby.getPost() != this){
+			postHobby.setPost(this);
+		}
+	}
+
+	public void addComment(Comment comment){
+		this.commentList.add(comment);
+		if(comment.getPost() != this){
+			comment.setPost(this);
+		}
 	}
 
 	public void update(PostRequestDto requestDto, User user) {

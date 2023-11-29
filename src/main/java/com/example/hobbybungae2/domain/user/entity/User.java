@@ -1,10 +1,9 @@
 package com.example.hobbybungae2.domain.user.entity;
 
-import com.example.hobbybungae2.domain.common.TimeStamp;
+import com.example.hobbybungae2.domain.comment.entity.Comment;
 import com.example.hobbybungae2.domain.hobby.entity.Hobby;
 import com.example.hobbybungae2.domain.post.entity.Post;
 import com.example.hobbybungae2.domain.user.dto.UserProfileRequestDto;
-import com.example.hobbybungae2.domain.user.dto.UserRequestDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,6 +29,9 @@ public class User{
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Post> postList = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Comment> commentList = new ArrayList<>();
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,6 +62,26 @@ public class User{
 		if(!requestDto.getName().isEmpty()) this.name = requestDto.getName();
 		this.password = password;
 		this.introduction = requestDto.getIntroduction();
-		this.hobbyList = requestDto.getHobbyList();
+	}
+
+	public void addHobby(Hobby hobby){
+		this.hobbyList.add(hobby);
+		if(hobby.getUser() != this){
+			hobby.setUser(this);
+		}
+	}
+
+	public void addPost(Post post){
+		this.postList.add(post);
+		if(post.getUser() != this){
+			post.setUser(this);
+		}
+	}
+
+	public void addComment(Comment comment){
+		this.commentList.add(comment);
+		if(comment.getUser() != this){
+			comment.setUser(this);
+		}
 	}
 }

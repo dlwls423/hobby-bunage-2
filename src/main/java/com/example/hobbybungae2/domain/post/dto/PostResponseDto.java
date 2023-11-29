@@ -26,7 +26,7 @@ public class PostResponseDto {
 
 	String userIdName;
 
-	List<Hobby> hobbyList;
+	List<String> hobbyNameList;
 
 	public PostResponseDto(Post savePost) {
 		this.postId = savePost.getId();
@@ -36,7 +36,7 @@ public class PostResponseDto {
 		this.modifiedAt = savePost.getModifiedAt();
 		this.state = savePost.getState();
 		this.userIdName = savePost.getUser().getIdName();
-		this.hobbyList = savePost.getPostHobbyList().stream()
-			.map(PostHobby::getHobby).toList();
+		this.hobbyNameList = savePost.getPostHobbyList().stream()
+			.map(PostHobby::getHobby).map(Hobby::getHobbyName).toList();
 	}
 }

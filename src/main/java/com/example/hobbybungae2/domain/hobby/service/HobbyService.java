@@ -42,7 +42,7 @@ public class HobbyService {
 	}
 
 	private void validateDuplication(String hobbyName) {
-		if (!hobbyRepository.findByHobbyName(hobbyName).isEmpty()) {
+		if (hobbyRepository.findByHobbyName(hobbyName).isPresent()) {
 			throw new DuplicatedHobbyException("hobby's name", hobbyName);
 		}
 	}
@@ -53,15 +53,17 @@ public class HobbyService {
 		);
 	}
 
+	@Transactional
 	public Hobby findHobbyByHobbyName(String hobbyName) {
 		return hobbyRepository.findByHobbyName(hobbyName).orElseThrow(
 			() -> new NotFoundHobbyException("hobby's name",hobbyName, "입력하신 취미 카테고리가 없습니다")
 		);
 	}
 
-	public void validateHobbyExistence(Hobby hobby) {
-		if (hobbyRepository.findByHobbyName(hobby.getHobbyName()).isEmpty()) {
-			throw new NotFoundHobbyException("hobby", hobby.getHobbyName(), "선택한 취미 카테고리가 없습니다");
+	@Transactional
+	public void validateHobbyExistence(List<String> hobbyNames) {
+		for(String hobbyName : hobbyNames){
+			findHobbyByHobbyName(hobbyName);
 		}
 	}
 }

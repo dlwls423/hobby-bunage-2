@@ -46,15 +46,10 @@ public class PostController {
 	}
 
 	@PostMapping
-//	public String addPost(@RequestBody PostRequestDto requestDto,
-//	public PostResponseDto addPost(@RequestBody PostRequestDto requestDto,
 	public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto requestDto,
-		@AuthenticationPrincipal UserDetailsImpl userDetails) throws JsonProcessingException {
-		log.info("Post Controller :: addPost");
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		PostResponseDto responseDto = postService.addPost(requestDto, userDetails.getUser());
-		log.info("Post Controller **COMPLETED** :: addPost");
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-//		return objectMapper.writeValueAsString(requestDto);
 	}
 
 	@PutMapping("/{postId}")

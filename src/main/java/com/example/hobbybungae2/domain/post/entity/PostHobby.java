@@ -22,17 +22,31 @@ public class PostHobby {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hobby_id", nullable = false)
     private Hobby hobby;
 
     public PostHobby(Post post, Hobby hobby){
+        setPost(post);
+        setHobby(hobby);
+    }
+
+    public void setPost(Post post){
         this.post = post;
+        if(!post.getPostHobbyList().contains(this)){
+            post.getPostHobbyList().add(this);
+        }
+    }
+
+    public void setHobby(Hobby hobby){
         this.hobby = hobby;
+        if(!hobby.getPostHobbyList().contains(this)){
+            hobby.getPostHobbyList().add(this);
+        }
     }
 
 }

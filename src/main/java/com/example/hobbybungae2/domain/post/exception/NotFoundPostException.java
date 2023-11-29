@@ -8,10 +8,6 @@ import com.example.hobbybungae2.global_exception.ErrorDetail;
 /* 번개글이 없는 경우 */
 public class NotFoundPostException extends DomainException {
 
-	public NotFoundPostException(String field, String value, String reason) {
-		super(ErrorCode.NOT_FOUND_POST, new ErrorDetail(field, value, reason));
-	}
-
 	public NotFoundPostException(String field, String value) {
 		super(ErrorCode.NOT_FOUND_POST, new ErrorDetail(field, value));
 	}

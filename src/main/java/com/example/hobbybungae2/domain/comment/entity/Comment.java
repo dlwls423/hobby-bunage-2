@@ -38,16 +38,23 @@ public class Comment {
 
 	public Comment(CommentRequestDto requestDto, User user, Post post) {
 		this.text = requestDto.getText();
+		setUser(user);
+		setPost(post);
+	}
+
+	public void setUser(User user){
 		this.user = user;
-		this.post = post;
+		if(!user.getCommentList().contains(this))
+			user.getCommentList().add(this);
 	}
 
 	public void setPost(Post post){
 		this.post = post;
+		if(!post.getCommentList().contains(this))
+			post.getCommentList().add(this);
 	}
 
-	public void update(CommentRequestDto requestDto, Post post) {
+	public void update(CommentRequestDto requestDto) {
 		this.text = requestDto.getText();
-		this.post = post;
 	}
 }
