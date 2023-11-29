@@ -75,7 +75,7 @@ public class HobbyService {
 	}
 
 	private void confirmBeforeDeleteHobby(Hobby hobby){
-		if(!hobby.getPostHobbyList().isEmpty() && !hobby.getUserHobbyList().isEmpty())
+		if(!hobby.getPostHobbyList().isEmpty() || !hobby.getUserHobbyList().isEmpty())
 			throw new CannotDeleteHobbyException("hobby", hobby.getHobbyName());
 	}
 }
