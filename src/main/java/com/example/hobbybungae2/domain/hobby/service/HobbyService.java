@@ -3,9 +3,15 @@ package com.example.hobbybungae2.domain.hobby.service;
 import com.example.hobbybungae2.domain.hobby.dto.HobbyRequestDto;
 import com.example.hobbybungae2.domain.hobby.dto.HobbyResponseDto;
 import com.example.hobbybungae2.domain.hobby.entity.Hobby;
+import com.example.hobbybungae2.domain.hobby.exception.CannotDeleteHobbyException;
 import com.example.hobbybungae2.domain.hobby.exception.DuplicatedHobbyException;
 import com.example.hobbybungae2.domain.hobby.exception.NotFoundHobbyException;
 import com.example.hobbybungae2.domain.hobby.repository.HobbyRepository;
+import com.example.hobbybungae2.domain.post.dto.PostRequestDto;
+import com.example.hobbybungae2.domain.post.entity.Post;
+import com.example.hobbybungae2.domain.post.entity.PostHobby;
+import com.example.hobbybungae2.domain.user.entity.User;
+import com.example.hobbybungae2.domain.user.entity.UserHobby;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +44,7 @@ public class HobbyService {
 
 	public void deleteHobby(Long hobbyId) {
 		Hobby hobby = findHobbyById(hobbyId);
+		confirmBeforeDeleteHobby(hobby);
 		hobbyRepository.delete(hobby);
 	}
 
@@ -65,5 +72,10 @@ public class HobbyService {
 		for(String hobbyName : hobbyNames){
 			findHobbyByHobbyName(hobbyName);
 		}
+	}
+
+	private void confirmBeforeDeleteHobby(Hobby hobby){
+		if(!hobby.getPostHobbyList().isEmpty() && !hobby.getUserHobbyList().isEmpty())
+			throw new CannotDeleteHobbyException("hobby", hobby.getHobbyName());
 	}
 }

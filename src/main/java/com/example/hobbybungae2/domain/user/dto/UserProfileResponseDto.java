@@ -24,6 +24,6 @@ public class UserProfileResponseDto {
 		this.idName = newUser.getIdName();
 		this.name = newUser.getName();
 		this.introduction = newUser.getIntroduction();
-		this.hobbyNameList = newUser.getHobbyList().stream().map(Hobby::getHobbyName).toList();
+		this.hobbyNameList = newUser.getUserHobbyList().stream().map(userHobby -> userHobby.getHobby().getHobbyName()).toList();
 	}
 }

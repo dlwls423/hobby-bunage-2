@@ -17,7 +17,6 @@ import com.example.hobbybungae2.domain.user.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,11 +56,7 @@ public class PostService {
 		Post post = new Post(requestDto, saveState, saveUser);
 		Post savePost = postRepository.save(post);
 
-		for(Hobby hobby : requestDto.getHobbyList()){
-			Hobby saveHobby = hobbyService.findHobbyByHobbyName(hobby.getHobbyName());
-			PostHobby postHobby = new PostHobby(savePost, saveHobby);
-			postHobbyRepository.save(postHobby);
-		}
+		savePostHobby(savePost, requestDto);
 
 		return new PostResponseDto(savePost);
 	}
@@ -75,11 +70,7 @@ public class PostService {
 
 		if(!post.getPostHobbyList().isEmpty()) post.getPostHobbyList().clear();
 
-		for(Hobby hobby : requestDto.getHobbyList()){
-			Hobby saveHobby = hobbyService.findHobbyByHobbyName(hobby.getHobbyName());
-			PostHobby postHobby = new PostHobby(post, saveHobby);
-			postHobbyRepository.save(postHobby);
-		}
+		savePostHobby(post, requestDto);
 
 		return new PostResponseDto(post);
 	}
@@ -100,6 +91,14 @@ public class PostService {
 		if (!postAuthorId.equals(loggedInUserId)) {
 			throw new InvalidPostModifierException("postAuthor", postAuthorId.toString(),
 				"사용자는 이 게시물을 업데이트/삭제할 권한이 없습니다.");
+		}
+	}
+
+	private void savePostHobby(Post post, PostRequestDto requestDto){
+		for(Hobby hobby : requestDto.getHobbyList()){
+			Hobby saveHobby = hobbyService.findHobbyByHobbyName(hobby.getHobbyName());
+			PostHobby postHobby = new PostHobby(post, saveHobby);
+			postHobbyRepository.save(postHobby);
 		}
 	}
 }

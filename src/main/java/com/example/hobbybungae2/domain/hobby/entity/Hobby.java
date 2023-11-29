@@ -2,6 +2,7 @@ package com.example.hobbybungae2.domain.hobby.entity;
 
 import com.example.hobbybungae2.domain.post.entity.PostHobby;
 import com.example.hobbybungae2.domain.user.entity.User;
+import com.example.hobbybungae2.domain.user.entity.UserHobby;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
@@ -28,12 +29,13 @@ import lombok.NoArgsConstructor;
 public class Hobby {
 
 	@OneToMany(mappedBy = "hobby", cascade = CascadeType.REMOVE)
-	//@JsonManagedReference
 	private final List<PostHobby> postHobbyList = new ArrayList<>();
+
+	@OneToMany(mappedBy = "hobby", cascade = CascadeType.REMOVE)
+	private final List<UserHobby> userHobbyList = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	//@JsonBackReference
 	User user;
 
 	@Id
@@ -48,17 +50,17 @@ public class Hobby {
 		this.hobbyName = hobbyName;
 	}
 
-	public void setUser(User user){
-		this.user = user;
-		if(!user.getHobbyList().contains(this)){
-			user.addHobby(this);
-		}
-	}
-
 	public void addPostHobby(PostHobby postHobby){
 		this.postHobbyList.add(postHobby);
 		if(postHobby.getHobby() != this){
 			postHobby.setHobby(this);
+		}
+	}
+
+	public void addUserHobby(UserHobby userHobby){
+		this.userHobbyList.add(userHobby);
+		if(userHobby.getHobby() != this){
+			userHobby.setHobby(this);
 		}
 	}
 }

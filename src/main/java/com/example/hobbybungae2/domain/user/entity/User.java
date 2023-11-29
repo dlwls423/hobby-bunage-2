@@ -3,6 +3,7 @@ package com.example.hobbybungae2.domain.user.entity;
 import com.example.hobbybungae2.domain.comment.entity.Comment;
 import com.example.hobbybungae2.domain.hobby.entity.Hobby;
 import com.example.hobbybungae2.domain.post.entity.Post;
+import com.example.hobbybungae2.domain.post.entity.PostHobby;
 import com.example.hobbybungae2.domain.user.dto.UserProfileRequestDto;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
@@ -25,16 +26,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "user")
 public class User{
 
-	@OneToMany(mappedBy = "user")
-	//@JsonManagedReference
-	private List<Hobby> hobbyList = new ArrayList<>();
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	private final List<UserHobby> userHobbyList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	//@JsonManagedReference
 	private List<Post> postList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	//+@JsonManagedReference
 	private List<Comment> commentList = new ArrayList<>();
 
 	@Id
@@ -68,13 +66,6 @@ public class User{
 		this.introduction = requestDto.getIntroduction();
 	}
 
-	public void addHobby(Hobby hobby){
-		this.hobbyList.add(hobby);
-		if(hobby.getUser() != this){
-			hobby.setUser(this);
-		}
-	}
-
 	public void addPost(Post post){
 		this.postList.add(post);
 		if(post.getUser() != this){
@@ -86,6 +77,13 @@ public class User{
 		this.commentList.add(comment);
 		if(comment.getUser() != this){
 			comment.setUser(this);
+		}
+	}
+
+	public void addUserHobby(UserHobby userHobby){
+		this.userHobbyList.add(userHobby);
+		if(userHobby.getUser() != this){
+			userHobby.setUser(this);
 		}
 	}
 }

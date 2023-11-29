@@ -31,21 +31,17 @@ import lombok.NoArgsConstructor;
 public class Post extends TimeStamp {
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-	//@JsonManagedReference
 	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true) // 댓글은 게시글에 의해 관리됨
-	//@JsonManagedReference
 	private final List<Comment> commentList = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "state_id")
-	//@JsonBackReference
 	State state;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	//@JsonBackReference
 	User user;
 
 	@Id

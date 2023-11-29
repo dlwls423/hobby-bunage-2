@@ -2,13 +2,17 @@ package com.example.hobbybungae2.domain.user.service;
 
 import com.example.hobbybungae2.domain.hobby.entity.Hobby;
 import com.example.hobbybungae2.domain.hobby.service.HobbyService;
+import com.example.hobbybungae2.domain.post.dto.PostRequestDto;
+import com.example.hobbybungae2.domain.post.entity.PostHobby;
 import com.example.hobbybungae2.domain.user.dto.UserProfileRequestDto;
 import com.example.hobbybungae2.domain.user.dto.UserProfileResponseDto;
 import com.example.hobbybungae2.domain.user.dto.UserRequestDto;
 import com.example.hobbybungae2.domain.user.dto.UserResponseDto;
 import com.example.hobbybungae2.domain.user.entity.User;
+import com.example.hobbybungae2.domain.user.entity.UserHobby;
 import com.example.hobbybungae2.domain.user.exception.DuplicatedUserException;
 import com.example.hobbybungae2.domain.user.exception.NotFoundUserException;
+import com.example.hobbybungae2.domain.user.repository.UserHobbyRepository;
 import com.example.hobbybungae2.domain.user.repository.UserRepository;
 import com.example.hobbybungae2.domain.user.exception.NotMatchingUserException;
 import com.example.hobbybungae2.domain.user.helper.PasswordCreator;
@@ -29,6 +33,9 @@ public class UserService {
 	private static final String DUPLICATED_USER_ERROR_MESSAGE = "중복되지 않는 아이디를 확인해주시길 바랍니다.";
 
 	private final UserRepository userRepository;
+
+	private final UserHobbyRepository userHobbyRepository;
+
 	private final HobbyService hobbyService;
 
 	private final PasswordEncoder passwordEncoder;
@@ -49,28 +56,25 @@ public class UserService {
 
 	// 사용자 프로필 조회
 	public UserProfileResponseDto getUser(Long id, User inputUser) {
-		validateId(id, inputUser.getId());
 		User user = getUserEntity(id);
+		validateId(id, inputUser.getId());
 		return new UserProfileResponseDto(user);
 	}
 
 	// 사용자 프로필 수정
 	@Transactional
 	public UserProfileResponseDto updateUser(Long id, UserProfileRequestDto requestDto, User signInUser) {
-		validateId(id, signInUser.getId());
 		User saveUser = getUserEntity(id);
+		validateId(id, signInUser.getId());
 		Optional<String> encodePasswordOrNull = PasswordCreator.createEncodePasswordOrNull(signInUser, requestDto,
 			passwordEncoder);
 
 		hobbyService.validateHobbyExistence(requestDto.getHobbyList().stream().map(Hobby::getHobbyName).toList());
 
 		saveUser.update(requestDto, encodePasswordOrNull.orElse(saveUser.getPassword()));
-		if(!saveUser.getHobbyList().isEmpty()) saveUser.getHobbyList().clear();
+		if(!saveUser.getUserHobbyList().isEmpty()) saveUser.getUserHobbyList().clear();
 
-		for(String hobbyName : requestDto.getHobbyList().stream().map(Hobby::getHobbyName).toList()){
-			Hobby saveHobby = hobbyService.findHobbyByHobbyName(hobbyName);
-			saveUser.addHobby(saveHobby);
-		}
+		saveUserHobby(saveUser, requestDto);
 
 		return new UserProfileResponseDto(saveUser);
 	}
@@ -95,5 +99,13 @@ public class UserService {
 	public User getUserEntity(Long userId) {
 		return userRepository.findById(userId)
 			.orElseThrow(() -> new NotFoundUserException("user_id", userId.toString()));
+	}
+
+	private void saveUserHobby(User user, UserProfileRequestDto requestDto){
+		for(Hobby hobby : requestDto.getHobbyList()){
+			Hobby saveHobby = hobbyService.findHobbyByHobbyName(hobby.getHobbyName());
+			UserHobby userHobby = new UserHobby(user, saveHobby);
+			userHobbyRepository.save(userHobby);
+		}
 	}
 }
