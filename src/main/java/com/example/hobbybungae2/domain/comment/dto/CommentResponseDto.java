@@ -15,7 +15,8 @@ public class CommentResponseDto {
     private String idName;
 
     public CommentResponseDto(Comment saveComment) {
-        this.postId = saveComment.getId();
+        this.postId = saveComment.getPost().getId();
+        this.commentId = saveComment.getId();
         this.text = saveComment.getText();
         this.idName = saveComment.getUser().getIdName();
     }

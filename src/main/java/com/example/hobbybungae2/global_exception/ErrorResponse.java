@@ -21,16 +21,8 @@ public class ErrorResponse {
         this.errorDetails = errorDetails;
     }
 
-    public ErrorResponse(ErrorCode error) {
-        this.error = error;
-    }
-
     public static ErrorResponse of(final ErrorCode errorCode, final BindingResult bindingResult) {
         return new ErrorResponse(errorCode, ErrorDetail.of(bindingResult));
-    }
-
-    public static ErrorResponse of(final ErrorCode errorCode) {
-        return new ErrorResponse(errorCode);
     }
 
     public static ErrorResponse of(ErrorCode errorCode, ErrorDetail errorDetail) {

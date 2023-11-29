@@ -24,16 +24,6 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생합
-     */
-    @ExceptionHandler(AccessDeniedException.class)
-    protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
-        log.error("handleAccessDeniedException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.ACCESS_DENIED);
-        return new ResponseEntity<>(response, ErrorCode.ACCESS_DENIED.getCode());
-    }
-
-    /**
      * 1. 도메인 관련 검증 실패 예외 케이스 2. 도메인 로직 수행 중의 예외 케이스 발생함
      */
     @ExceptionHandler(DomainException.class)
