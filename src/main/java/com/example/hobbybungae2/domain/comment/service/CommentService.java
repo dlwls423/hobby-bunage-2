@@ -10,6 +10,7 @@ import com.example.hobbybungae2.domain.comment.repository.CommentRepository;
 import com.example.hobbybungae2.domain.post.entity.Post;
 import com.example.hobbybungae2.domain.post.service.PostService;
 import com.example.hobbybungae2.domain.user.entity.User;
+import com.example.hobbybungae2.domain.user.service.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,44 +25,48 @@ public class CommentService {
 
 	private final PostService postService;
 
-	@Transactional(readOnly = true)
+	private final UserService userService;
+
 	public List<CommentResponseDto> getComments(Long postId) {
-		Post post = postService.getPostById(postId);
+		Post savePost = postService.getPostById(postId);
 
-		return commentRepository.findAllByPost(post)
-			.stream().map(CommentResponseDto::new).toList();
-	}
+		List<CommentResponseDto> responseDtoList = savePost.getCommentList().stream().map(
+			CommentResponseDto::new).toList();
 
-	@Transactional(readOnly = true)
-	public Comment getCommentById(Long commentId) {
-		return commentRepository.findById(commentId).orElseThrow(
-			() -> new NotFoundCommentException("comment's id", commentId.toString())
-		);
+		return responseDtoList;
 	}
 
 	public CommentResponseDto postComment(Long postId, CommentRequestDto requestDto, User user) {
-		Post post = postService.getPostById(postId);
-		Comment comment = new Comment(requestDto, user, post);
+		Post savePost = postService.getPostById(postId);
+		User saveUser = userService.getUserEntity(user.getId());
+		Comment comment = new Comment(requestDto, saveUser, savePost);
+
 		Comment saveComment = commentRepository.save(comment);
 		return new CommentResponseDto(saveComment);
 	}
 
+	@Transactional
 	public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, User user) {
-		Comment comment = getCommentById(commentId);
-		checkPost(comment, postId);
-		checkUser(comment, user.getIdName());
+		Comment saveComment = getCommentById(commentId);
+		checkPost(saveComment, postId);
+		checkUser(saveComment, user.getIdName());
 
-		comment.update(requestDto);
-		return new CommentResponseDto(comment);
+		saveComment.update(requestDto);
+		return new CommentResponseDto(saveComment);
 	}
 
-
 	public void deleteComment(Long postId, Long commentId, User user) {
-		Comment comment = getCommentById(commentId);
-		checkPost(comment, postId);
-		checkUser(comment, user.getIdName());
+		Comment saveComment = getCommentById(commentId);
+		checkPost(saveComment, postId);
+		checkUser(saveComment, user.getIdName());
 
-		commentRepository.delete(comment);
+		commentRepository.delete(saveComment);
+	}
+
+	public Comment getCommentById(Long commentId) {
+		return commentRepository.findById(commentId).orElseThrow(
+			() -> new NotFoundCommentException("comment's id", commentId.toString())
+		);
 	}
 
 	public void checkPost(Comment comment, Long postId) {

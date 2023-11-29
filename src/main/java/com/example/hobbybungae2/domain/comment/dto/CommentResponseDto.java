@@ -6,19 +6,16 @@ import lombok.Getter;
 
 @Getter
 public class CommentResponseDto {
+    private Long postId;
+
     private Long commentId;
 
     private String text;
 
     private String idName;
 
-    public CommentResponseDto(Comment comment, User user) {
-        this.commentId = comment.getId();
-        this.text = comment.getText();
-        this.idName = user.getIdName();
-    }
-
     public CommentResponseDto(Comment saveComment) {
+        this.postId = saveComment.getId();
         this.text = saveComment.getText();
         this.idName = saveComment.getUser().getIdName();
     }
