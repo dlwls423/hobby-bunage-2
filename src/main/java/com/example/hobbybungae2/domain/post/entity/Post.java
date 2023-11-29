@@ -5,8 +5,10 @@ import com.example.hobbybungae2.domain.common.TimeStamp;
 import com.example.hobbybungae2.domain.hobby.entity.Hobby;
 import com.example.hobbybungae2.domain.state.entity.State;
 import com.example.hobbybungae2.domain.user.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,22 +29,22 @@ import lombok.NoArgsConstructor;
 public class Post extends TimeStamp {
 
 	@OneToMany(mappedBy = "post")
-	private final List<Hobby> hobbyList = new ArrayList<>();
+	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
-	@OneToMany(mappedBy = "post")
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true) // 댓글은 게시글에 의해 관리됨
 	private final List<Comment> commentList = new ArrayList<>();
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "state_id")
 	State state;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	User user;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long postId;
+	private Long id;
 
 	@Column(nullable = false, length = 20)
 	private String title;
@@ -50,5 +52,11 @@ public class Post extends TimeStamp {
 	@Column(nullable = false, length = 500)
 	private String content;
 
+	public void setState(State state){
+		this.state = state;
+	}
 
+	public void setUser(User user){
+		this.user = user;
+	}
 }

@@ -3,6 +3,7 @@ package com.example.hobbybungae2.domain.comment.entity;
 import com.example.hobbybungae2.domain.post.entity.Post;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,15 +19,18 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Comment {
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id")
 	private Post post;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long commentId;
+	private Long id;
 
 	@Column(nullable = false)
 	private String text;
 
+	public void setPost(Post post){
+		this.post = post;
+	}
 }

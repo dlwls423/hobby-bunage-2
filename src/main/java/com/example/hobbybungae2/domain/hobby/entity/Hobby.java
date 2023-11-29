@@ -1,6 +1,7 @@
 package com.example.hobbybungae2.domain.hobby.entity;
 
 import com.example.hobbybungae2.domain.post.entity.Post;
+import com.example.hobbybungae2.domain.post.entity.PostHobby;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -25,12 +26,12 @@ import lombok.NoArgsConstructor;
 public class Hobby {
 
 	@OneToMany(mappedBy = "hobby")
-	private final List<Post> postList = new ArrayList<>();
+	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
 	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long hobbyId;
+	private Long id;
 
 	@Column
 	private String hobbyName;

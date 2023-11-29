@@ -11,7 +11,7 @@ public class HobbyResponseDto {
 	private String hobbyName;
 
 	public HobbyResponseDto(Hobby hobby) {
-		this.hobbyId = hobby.getHobbyId();
+		this.hobbyId = hobby.getId();
 		this.hobbyName = hobby.getHobbyName();
 	}
 }

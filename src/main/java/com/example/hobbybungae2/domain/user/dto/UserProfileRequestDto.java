@@ -2,13 +2,12 @@ package com.example.hobbybungae2.domain.user.dto;
 
 import com.example.hobbybungae2.domain.hobby.entity.Hobby;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public class UserProfileRequestDto {
-
+    @Nullable
     @Pattern(regexp = "^[가-힣a-zA-Z]*$")
     String name;
 

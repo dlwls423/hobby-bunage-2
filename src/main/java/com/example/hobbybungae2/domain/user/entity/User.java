@@ -2,6 +2,8 @@ package com.example.hobbybungae2.domain.user.entity;
 
 import com.example.hobbybungae2.domain.common.TimeStamp;
 import com.example.hobbybungae2.domain.hobby.entity.Hobby;
+import com.example.hobbybungae2.domain.post.entity.Post;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,9 @@ public class User extends TimeStamp {
 	@OneToMany(mappedBy = "user")
 	private final List<Hobby> hobbyList = new ArrayList<>();
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private final List<Post> postList = new ArrayList<>();
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
@@ -37,7 +42,6 @@ public class User extends TimeStamp {
 
 	@Column
 	private String introduction;
-
 
 	@Builder
 	public User(Long id, String idName, String name, String introduction, String password) {

@@ -13,7 +13,7 @@ public class CommentResponseDto {
     private String idName;
 
     public CommentResponseDto(Comment comment, User user) {
-        this.commentId = comment.getCommentId();
+        this.commentId = comment.getId();
         this.text = comment.getText();
         this.idName = user.getIdName();
     }
