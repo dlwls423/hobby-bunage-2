@@ -1,6 +1,7 @@
 package com.example.hobbybungae2.domain.state.entity;
 
 import com.example.hobbybungae2.domain.post.entity.Post;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 public class State {
 
 	@OneToMany(mappedBy = "state")
+	//@JsonManagedReference
 	private List<Post> postList = new ArrayList<>();
 
 	@Id

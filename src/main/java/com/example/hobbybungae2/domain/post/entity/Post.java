@@ -2,10 +2,11 @@ package com.example.hobbybungae2.domain.post.entity;
 
 import com.example.hobbybungae2.domain.comment.entity.Comment;
 import com.example.hobbybungae2.domain.common.TimeStamp;
-import com.example.hobbybungae2.domain.hobby.entity.Hobby;
 import com.example.hobbybungae2.domain.post.dto.PostRequestDto;
 import com.example.hobbybungae2.domain.state.entity.State;
 import com.example.hobbybungae2.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,22 +26,26 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Table(name = "post")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Entity
 public class Post extends TimeStamp {
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+	//@JsonManagedReference
 	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true) // 댓글은 게시글에 의해 관리됨
+	//@JsonManagedReference
 	private final List<Comment> commentList = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "state_id")
+	//@JsonBackReference
 	State state;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
+	//@JsonBackReference
 	User user;
 
 	@Id
@@ -60,16 +65,23 @@ public class Post extends TimeStamp {
 		setUser(user);
 	}
 
+	public void update(PostRequestDto requestDto, State state) {
+		this.title = requestDto.getTitle();
+		this.content = requestDto.getContent();
+		this.state = requestDto.getState();
+		setState(state);
+	}
+
 	public void setUser(User user){
 		this.user = user;
 		if(!user.getPostList().contains(this))
-			user.getPostList().add(this);
+			user.addPost(this);
 	}
 
 	public void setState(State state){
 		this.state = state;
 		if(!state.getPostList().contains(this))
-			state.getPostList().add(this);
+			state.addPost(this);
 	}
 
 	public void addPostHobby(PostHobby postHobby){
@@ -84,12 +96,5 @@ public class Post extends TimeStamp {
 		if(comment.getPost() != this){
 			comment.setPost(this);
 		}
-	}
-
-	public void update(PostRequestDto requestDto, User user) {
-		this.title = requestDto.getTitle();
-		this.content = requestDto.getContent();
-		this.state = requestDto.getState();
-		this.user = user;
 	}
 }

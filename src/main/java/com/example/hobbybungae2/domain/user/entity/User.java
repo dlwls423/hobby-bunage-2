@@ -4,6 +4,7 @@ import com.example.hobbybungae2.domain.comment.entity.Comment;
 import com.example.hobbybungae2.domain.hobby.entity.Hobby;
 import com.example.hobbybungae2.domain.post.entity.Post;
 import com.example.hobbybungae2.domain.user.dto.UserProfileRequestDto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,12 +26,15 @@ import lombok.NoArgsConstructor;
 public class User{
 
 	@OneToMany(mappedBy = "user")
+	//@JsonManagedReference
 	private List<Hobby> hobbyList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	//@JsonManagedReference
 	private List<Post> postList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	//+@JsonManagedReference
 	private List<Comment> commentList = new ArrayList<>();
 
 	@Id

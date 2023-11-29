@@ -1,7 +1,7 @@
 package com.example.hobbybungae2.domain.post.entity;
 
 import com.example.hobbybungae2.domain.hobby.entity.Hobby;
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,10 +24,12 @@ public class PostHobby {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
+    //@JsonBackReference
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hobby_id", nullable = false)
+    //@JsonBackReference
     private Hobby hobby;
 
     public PostHobby(Post post, Hobby hobby){
@@ -38,14 +40,14 @@ public class PostHobby {
     public void setPost(Post post){
         this.post = post;
         if(!post.getPostHobbyList().contains(this)){
-            post.getPostHobbyList().add(this);
+            post.addPostHobby(this);
         }
     }
 
     public void setHobby(Hobby hobby){
         this.hobby = hobby;
         if(!hobby.getPostHobbyList().contains(this)){
-            hobby.getPostHobbyList().add(this);
+            hobby.addPostHobby(this);
         }
     }
 

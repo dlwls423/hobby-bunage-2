@@ -22,7 +22,11 @@ public class PostResponseDto {
 
 	LocalDateTime modifiedAt;
 
-	State state;
+	String stateDo;
+
+	String stateSi;
+
+	String stateGu;
 
 	String userIdName;
 
@@ -34,7 +38,9 @@ public class PostResponseDto {
 		this.content = savePost.getContent();
 		this.createdAt = savePost.getCreatedAt();
 		this.modifiedAt = savePost.getModifiedAt();
-		this.state = savePost.getState();
+		this.stateDo = savePost.getState().getStateDo();
+		this.stateSi = savePost.getState().getStateSi();
+		this.stateGu = savePost.getState().getStateGu();
 		this.userIdName = savePost.getUser().getIdName();
 		this.hobbyNameList = savePost.getPostHobbyList().stream()
 			.map(PostHobby::getHobby).map(Hobby::getHobbyName).toList();
