@@ -1,5 +1,7 @@
 package com.example.hobbybungae2.domain.user.service;
 
+import com.example.hobbybungae2.domain.hobby.entity.Hobby;
+import com.example.hobbybungae2.domain.hobby.service.HobbyService;
 import com.example.hobbybungae2.domain.user.dto.UserProfileRequestDto;
 import com.example.hobbybungae2.domain.user.dto.UserProfileResponseDto;
 import com.example.hobbybungae2.domain.user.dto.UserRequestDto;
@@ -27,6 +29,7 @@ public class UserService {
 	private static final String DUPLICATED_USER_ERROR_MESSAGE = "중복되지 않는 아이디를 확인해주시길 바랍니다.";
 
 	private final UserRepository userRepository;
+	private final HobbyService hobbyService;
 
 	private final PasswordEncoder passwordEncoder;
 
@@ -57,6 +60,10 @@ public class UserService {
 		validateId(id, signInUser.getId());
 		Optional<String> encodePasswordOrNull = PasswordCreator.createEncodePasswordOrNull(signInUser, requestDto,
 			passwordEncoder);
+
+		for(String hobbyName : requestDto.getHobbyList().stream().map(Hobby::getHobbyName).toList()){
+			hobbyService.findHobbyByHobbyName(hobbyName);
+		}
 
 		signInUser.update(requestDto, encodePasswordOrNull.orElse(signInUser.getPassword()));
 

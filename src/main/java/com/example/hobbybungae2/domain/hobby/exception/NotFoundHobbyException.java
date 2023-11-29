@@ -10,8 +10,4 @@ public class NotFoundHobbyException extends DomainException {
 	public NotFoundHobbyException(String field, String value, String reason) {
 		super(ErrorCode.NOT_FOUND_HOBBY, new ErrorDetail(field, value, reason));
 	}
-
-	public NotFoundHobbyException(String field, String value) {
-		super(ErrorCode.NOT_FOUND_HOBBY, new ErrorDetail(field, value));
-	}
 }

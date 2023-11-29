@@ -41,16 +41,22 @@ public class HobbyService {
 		hobbyRepository.delete(hobby);
 	}
 
+	private void validateDuplication(String hobbyName) {
+		if (!hobbyRepository.findByHobbyName(hobbyName).isEmpty()) {
+			throw new DuplicatedHobbyException("hobby's name", hobbyName);
+		}
+	}
+
 	private Hobby findHobbyById(Long hobbyId) {
 		return hobbyRepository.findById(hobbyId).orElseThrow(
 			() -> new NotFoundHobbyException("hobbyId", hobbyId.toString(), "선택한 취미 카테고리 ID가 없습니다")
 		);
 	}
 
-	private void validateDuplication(String hobbyName) {
-		if (!hobbyRepository.findByHobbyName(hobbyName).isEmpty()) {
-			throw new DuplicatedHobbyException("hobby's name", hobbyName);
-		}
+	public Hobby findHobbyByHobbyName(String hobbyName) {
+		return hobbyRepository.findByHobbyName(hobbyName).orElseThrow(
+			() -> new NotFoundHobbyException("hobby's name",hobbyName, "입력하신 취미 카테고리가 없습니다")
+		);
 	}
 
 	public void validateHobbyExistence(Hobby hobby) {
