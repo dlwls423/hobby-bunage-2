@@ -1,11 +1,11 @@
 package com.example.hobbybungae2.domain.hobby.service;
 
-import com.example.hobbybungae.domain.hobby.dto.HobbyRequestDto;
-import com.example.hobbybungae.domain.hobby.dto.HobbyResponseDto;
-import com.example.hobbybungae.domain.hobby.entity.Hobby;
-import com.example.hobbybungae.domain.hobby.exception.DuplicatedHobbyException;
-import com.example.hobbybungae.domain.hobby.exception.NotFoundHobbyException;
-import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
+import com.example.hobbybungae2.domain.hobby.dto.HobbyRequestDto;
+import com.example.hobbybungae2.domain.hobby.dto.HobbyResponseDto;
+import com.example.hobbybungae2.domain.hobby.entity.Hobby;
+import com.example.hobbybungae2.domain.hobby.exception.DuplicatedHobbyException;
+import com.example.hobbybungae2.domain.hobby.exception.NotFoundHobbyException;
+import com.example.hobbybungae2.domain.hobby.repository.HobbyRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

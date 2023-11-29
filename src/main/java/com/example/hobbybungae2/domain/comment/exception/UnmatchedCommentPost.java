@@ -1,8 +1,9 @@
 package com.example.hobbybungae2.domain.comment.exception;
 
-import com.example.hobbybungae.domain.common.DomainException;
-import com.example.hobbybungae.global_exception.ErrorCode;
-import com.example.hobbybungae.global_exception.ErrorDetail;
+
+import com.example.hobbybungae2.domain.common.DomainException;
+import com.example.hobbybungae2.global_exception.ErrorCode;
+import com.example.hobbybungae2.global_exception.ErrorDetail;
 
 /* 댓글이 해당 게시글의 댓글이 아닌 경우 */
 public class UnmatchedCommentPost extends DomainException {

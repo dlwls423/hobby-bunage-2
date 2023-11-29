@@ -1,8 +1,8 @@
 package com.example.hobbybungae2.domain.hobby.controller;
 
-import com.example.hobbybungae.domain.hobby.dto.HobbyRequestDto;
-import com.example.hobbybungae.domain.hobby.dto.HobbyResponseDto;
-import com.example.hobbybungae.domain.hobby.service.HobbyService;
+import com.example.hobbybungae2.domain.hobby.dto.HobbyRequestDto;
+import com.example.hobbybungae2.domain.hobby.dto.HobbyResponseDto;
+import com.example.hobbybungae2.domain.hobby.service.HobbyService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

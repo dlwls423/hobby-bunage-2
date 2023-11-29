@@ -1,9 +1,6 @@
 package com.example.hobbybungae2.domain.user.dto;
 
-
-import com.example.hobbybungae2.domain.hobby.entity.Hobby;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import java.util.List;
+import com.example.hobbybungae2.domain.user.entity.User;
 import lombok.Getter;
 
 @Getter
@@ -15,8 +12,9 @@ public class UserResponseDto{
 
 	String name;
 
-	String introduction;
-
-	List<Hobby> hobbyList;
-
+	public UserResponseDto(User newUser) {
+		this.id = newUser.getId();
+		this.idName = newUser.getIdName();
+		this.name = newUser.getName();
+	}
 }

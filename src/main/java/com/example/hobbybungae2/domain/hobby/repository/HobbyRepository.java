@@ -1,6 +1,7 @@
 package com.example.hobbybungae2.domain.hobby.repository;
 
-import com.example.hobbybungae.domain.hobby.entity.Hobby;
+
+import com.example.hobbybungae2.domain.hobby.entity.Hobby;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

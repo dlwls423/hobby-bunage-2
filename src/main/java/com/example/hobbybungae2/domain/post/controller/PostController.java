@@ -1,9 +1,9 @@
 package com.example.hobbybungae2.domain.post.controller;
 
-import com.example.hobbybungae.domain.post.dto.PostRequestDto;
-import com.example.hobbybungae.domain.post.dto.PostResponseDto;
-import com.example.hobbybungae.domain.post.service.PostService;
-import com.example.hobbybungae.security.UserDetailsImpl;
+import com.example.hobbybungae2.domain.post.dto.PostRequestDto;
+import com.example.hobbybungae2.domain.post.dto.PostResponseDto;
+import com.example.hobbybungae2.domain.post.service.PostService;
+import com.example.hobbybungae2.security.UserDetailsImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import java.util.List;

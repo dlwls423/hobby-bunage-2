@@ -3,6 +3,7 @@ package com.example.hobbybungae2.domain.post.entity;
 import com.example.hobbybungae2.domain.comment.entity.Comment;
 import com.example.hobbybungae2.domain.common.TimeStamp;
 import com.example.hobbybungae2.domain.hobby.entity.Hobby;
+import com.example.hobbybungae2.domain.post.dto.PostRequestDto;
 import com.example.hobbybungae2.domain.state.entity.State;
 import com.example.hobbybungae2.domain.user.entity.User;
 import jakarta.persistence.CascadeType;
@@ -52,11 +53,25 @@ public class Post extends TimeStamp {
 	@Column(nullable = false, length = 500)
 	private String content;
 
+	public Post(PostRequestDto requestDto, User user){
+		this.title = requestDto.getTitle();
+		this.content = requestDto.getContent();
+		this.state = requestDto.getState();
+		this.user = user;
+	}
+
 	public void setState(State state){
 		this.state = state;
 	}
 
 	public void setUser(User user){
+		this.user = user;
+	}
+
+	public void update(PostRequestDto requestDto, User user) {
+		this.title = requestDto.getTitle();
+		this.content = requestDto.getContent();
+		this.state = requestDto.getState();
 		this.user = user;
 	}
 }

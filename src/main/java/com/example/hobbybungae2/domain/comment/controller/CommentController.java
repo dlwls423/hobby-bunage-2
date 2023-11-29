@@ -1,9 +1,9 @@
 package com.example.hobbybungae2.domain.comment.controller;
 
-import com.example.hobbybungae.domain.comment.dto.CommentRequestDto;
-import com.example.hobbybungae.domain.comment.dto.CommentResponseDto;
-import com.example.hobbybungae.domain.comment.service.CommentService;
-import com.example.hobbybungae.security.UserDetailsImpl;
+import com.example.hobbybungae2.domain.comment.dto.CommentRequestDto;
+import com.example.hobbybungae2.domain.comment.dto.CommentResponseDto;
+import com.example.hobbybungae2.domain.comment.service.CommentService;
+import com.example.hobbybungae2.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

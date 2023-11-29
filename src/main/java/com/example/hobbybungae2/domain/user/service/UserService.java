@@ -1,10 +1,17 @@
 package com.example.hobbybungae2.domain.user.service;
 
-import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
-import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
-import com.example.hobbybungae.domain.user.entity.User;
-import com.example.hobbybungae.domain.user.exception.DuplicatedUserException;
-import com.example.hobbybungae.domain.user.repository.UserRepository;
+import com.example.hobbybungae2.domain.user.dto.UserProfileRequestDto;
+import com.example.hobbybungae2.domain.user.dto.UserProfileResponseDto;
+import com.example.hobbybungae2.domain.user.dto.UserRequestDto;
+import com.example.hobbybungae2.domain.user.dto.UserResponseDto;
+import com.example.hobbybungae2.domain.user.entity.User;
+import com.example.hobbybungae2.domain.user.exception.DuplicatedUserException;
+import com.example.hobbybungae2.domain.user.exception.NotFoundUserException;
+import com.example.hobbybungae2.domain.user.repository.UserRepository;
+import com.example.hobbybungae2.domain.user.exception.NotMatchingUserException;
+import com.example.hobbybungae2.domain.user.helper.PasswordCreator;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,31 +26,62 @@ public class UserService {
 
 	private static final String DUPLICATED_USER_ERROR_MESSAGE = "중복되지 않는 아이디를 확인해주시길 바랍니다.";
 
-	//    private final ProfileService profileService;
 	private final UserRepository userRepository;
 
 	private final PasswordEncoder passwordEncoder;
+
+	// 회원가입 - 사용자 저장
+	public ResponseEntity<UserResponseDto> signUp(UserRequestDto requestDto) {
+		verifyDuplicatedUser(requestDto);
+
+		User newUser = User.builder()
+			.idName(requestDto.getIdName())
+			.name(requestDto.getName())
+			.password(passwordEncoder.encode(requestDto.getPassword()))
+			.build();
+		userRepository.save(newUser);
+
+		return new ResponseEntity<>(new UserResponseDto(newUser), HttpStatus.OK);
+	}
+
+	// 사용자 프로필 조회
+	public UserProfileResponseDto getUser(Long id, User inputUser) {
+		validateId(id, inputUser.getId());
+		User user = getUserEntity(id);
+		return new UserProfileResponseDto(user);
+	}
+
+	// 사용자 프로필 수정
+	@Transactional
+	public UserProfileResponseDto updateUser(Long id, UserProfileRequestDto requestDto, User signInUser) {
+		validateId(id, signInUser.getId());
+		Optional<String> encodePasswordOrNull = PasswordCreator.createEncodePasswordOrNull(signInUser, requestDto,
+			passwordEncoder);
+
+		signInUser.update(requestDto, encodePasswordOrNull.orElse(signInUser.getPassword()));
+
+		return new UserProfileResponseDto(signInUser);
+	}
+
+	private void verifyDuplicatedUser(UserRequestDto requestDto) {
+		if (hasDuplicatedUser(requestDto.getIdName())) {
+			throw new DuplicatedUserException("id_name", requestDto.getIdName(), DUPLICATED_USER_ERROR_MESSAGE);
+		}
+	}
 
 	public boolean hasDuplicatedUser(String idName) {
 		return userRepository.findByIdName(idName).isPresent();
 	}
 
-	public ResponseEntity<UserResponseDto> signUp(UserRequestDto requestDto) throws DuplicatedUserException {
-		verifyDuplicatedUser(requestDto);
-
-		User newUser = User.builder()
-			.idName(requestDto.idName())
-			.name(requestDto.name())
-			.password(passwordEncoder.encode(requestDto.password()))
-			.build();
-		userRepository.save(newUser);
-
-		return new ResponseEntity<>(new UserResponseDto(newUser.getIdName(), newUser.getName()), HttpStatus.OK);
+	private static void validateId(Long inputId, Long signedInUserId) {
+		if (!Objects.equals(inputId, signedInUserId)) {
+			throw new NotMatchingUserException("user.id", signedInUserId.toString());
+		}
 	}
 
-	private void verifyDuplicatedUser(UserRequestDto requestDto) throws DuplicatedUserException {
-		if (hasDuplicatedUser(requestDto.idName())) {
-			throw new DuplicatedUserException("id_name", requestDto.idName(), DUPLICATED_USER_ERROR_MESSAGE);
-		}
+	@Transactional(readOnly = true)
+	public User getUserEntity(Long userId) {
+		return userRepository.findById(userId)
+			.orElseThrow(() -> new NotFoundUserException("user_id", userId.toString()));
 	}
 }

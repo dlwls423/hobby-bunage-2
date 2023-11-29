@@ -1,17 +1,17 @@
 package com.example.hobbybungae2.domain.post.service;
 
-import com.example.hobbybungae.domain.hobby.entity.Hobby;
-import com.example.hobbybungae.domain.hobby.exception.NotFoundHobbyException;
-import com.example.hobbybungae.domain.hobby.service.HobbyService;
-import com.example.hobbybungae.domain.post.dto.PostRequestDto;
-import com.example.hobbybungae.domain.post.dto.PostResponseDto;
-import com.example.hobbybungae.domain.post.entity.Post;
-import com.example.hobbybungae.domain.post.exception.InvalidPostModifierException;
-import com.example.hobbybungae.domain.post.exception.NotFoundPostException;
-import com.example.hobbybungae.domain.post.repository.PostRepository;
-import com.example.hobbybungae.domain.state.exception.NotFoundStateException;
-import com.example.hobbybungae.domain.state.service.StateService;
-import com.example.hobbybungae.domain.user.entity.User;
+import com.example.hobbybungae2.domain.hobby.entity.Hobby;
+import com.example.hobbybungae2.domain.hobby.exception.NotFoundHobbyException;
+import com.example.hobbybungae2.domain.hobby.service.HobbyService;
+import com.example.hobbybungae2.domain.post.dto.PostRequestDto;
+import com.example.hobbybungae2.domain.post.dto.PostResponseDto;
+import com.example.hobbybungae2.domain.post.entity.Post;
+import com.example.hobbybungae2.domain.post.exception.InvalidPostModifierException;
+import com.example.hobbybungae2.domain.post.exception.NotFoundPostException;
+import com.example.hobbybungae2.domain.post.repository.PostRepository;
+import com.example.hobbybungae2.domain.state.exception.NotFoundStateException;
+import com.example.hobbybungae2.domain.state.service.StateService;
+import com.example.hobbybungae2.domain.user.entity.User;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -52,14 +52,14 @@ public class PostService {
 
 		// 취미카테고리 & 지역 데이터 존재여부 검증
 		try {
-			validateHobbiesExistence(requestDto.hobbies());
+			validateHobbiesExistence(requestDto.getHobbyList());
 		} catch (NotFoundHobbyException exception) {
 			log.error(exception.getMessage());
 			log.error(exception.toString());
 			throw exception;
 		}
 		try {
-			stateService.validateStateExistence(requestDto.state());
+			stateService.validateStateExistence(requestDto.getState());
 		} catch (NotFoundStateException exception) {
 			log.error(exception.getMessage());
 			log.error(exception.toString());
@@ -67,7 +67,7 @@ public class PostService {
 		}
 
 		// Dto -> Entity
-		Post post = Post.of(requestDto, user);
+		Post post = new Post(requestDto, user);
 		Post savePost = postRepository.save(post);
 		log.info("Post Service **COMPLETED** :: addPost");
 		return new PostResponseDto(savePost);

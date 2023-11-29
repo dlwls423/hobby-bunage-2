@@ -1,15 +1,15 @@
 package com.example.hobbybungae2.domain.comment.service;
 
-import com.example.hobbybungae.domain.comment.dto.CommentRequestDto;
-import com.example.hobbybungae.domain.comment.dto.CommentResponseDto;
-import com.example.hobbybungae.domain.comment.entity.Comment;
-import com.example.hobbybungae.domain.comment.exception.InvalidCommentModifier;
-import com.example.hobbybungae.domain.comment.exception.NotFoundCommentException;
-import com.example.hobbybungae.domain.comment.exception.UnmatchedCommentPost;
-import com.example.hobbybungae.domain.comment.repository.CommentRepository;
-import com.example.hobbybungae.domain.post.entity.Post;
-import com.example.hobbybungae.domain.post.service.PostService;
-import com.example.hobbybungae.domain.user.entity.User;
+import com.example.hobbybungae2.domain.comment.dto.CommentRequestDto;
+import com.example.hobbybungae2.domain.comment.dto.CommentResponseDto;
+import com.example.hobbybungae2.domain.comment.entity.Comment;
+import com.example.hobbybungae2.domain.comment.exception.InvalidCommentModifier;
+import com.example.hobbybungae2.domain.comment.exception.NotFoundCommentException;
+import com.example.hobbybungae2.domain.comment.exception.UnmatchedCommentPost;
+import com.example.hobbybungae2.domain.comment.repository.CommentRepository;
+import com.example.hobbybungae2.domain.post.entity.Post;
+import com.example.hobbybungae2.domain.post.service.PostService;
+import com.example.hobbybungae2.domain.user.entity.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
