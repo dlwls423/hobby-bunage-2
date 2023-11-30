@@ -1,7 +1,6 @@
 package com.example.hobbybungae2.domain.state.entity;
 
 import com.example.hobbybungae2.domain.post.entity.Post;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +10,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +20,6 @@ import lombok.NoArgsConstructor;
 public class State {
 
 	@OneToMany(mappedBy = "state")
-	//@JsonManagedReference
 	private List<Post> postList = new ArrayList<>();
 
 	@Id
@@ -37,13 +34,6 @@ public class State {
 
 	@Column(name = "gu")
 	private String stateGu;
-
-	@Builder
-	public State(String stateDo, String stateSi, String stateGu) {
-		this.stateDo = stateDo;
-		this.stateSi = stateSi;
-		this.stateGu = stateGu;
-	}
 
 	public void addPost(Post post){
 		this.postList.add(post);

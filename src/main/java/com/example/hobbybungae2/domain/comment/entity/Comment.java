@@ -3,7 +3,6 @@ package com.example.hobbybungae2.domain.comment.entity;
 import com.example.hobbybungae2.domain.comment.dto.CommentRequestDto;
 import com.example.hobbybungae2.domain.post.entity.Post;
 import com.example.hobbybungae2.domain.user.entity.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,12 +23,10 @@ public class Comment {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id")
-	//@JsonBackReference
 	private Post post;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	//@JsonBackReference
 	private User user;
 
 	@Id

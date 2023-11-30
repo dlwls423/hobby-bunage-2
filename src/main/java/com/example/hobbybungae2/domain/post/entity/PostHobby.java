@@ -1,7 +1,6 @@
 package com.example.hobbybungae2.domain.post.entity;
 
 import com.example.hobbybungae2.domain.hobby.entity.Hobby;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,12 +23,10 @@ public class PostHobby {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
-    //@JsonBackReference
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hobby_id", nullable = false)
-    //@JsonBackReference
     private Hobby hobby;
 
     public PostHobby(Post post, Hobby hobby){
