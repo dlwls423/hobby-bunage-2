@@ -45,6 +45,12 @@ public class PostService {
 			.collect(Collectors.toList());
 	}
 
+	public List<PostResponseDto> getPostsInHobby(Long hobbyId) {
+		List<PostHobby> postHobbyList = postHobbyRepository.findAllByHobbyId(hobbyId);
+		List<Post> postList = postHobbyList.stream().map(PostHobby::getPost).toList();
+		return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
+	}
+
 	@Transactional
 	public PostResponseDto addPost(PostRequestDto requestDto, User user) {
 		// 취미카테고리 & 지역 데이터 존재여부 검증

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -40,6 +41,12 @@ public class PostController {
 	@GetMapping
 	public ResponseEntity<List<PostResponseDto>> getPosts() {
 		List<PostResponseDto> responseDto = postService.getPosts();
+		return ResponseEntity.ok(responseDto);
+	}
+
+	@GetMapping("/categories")
+	public ResponseEntity<List<PostResponseDto>> getPostsInHobby(@RequestParam("hobbyId") Long hobbyId){
+		List<PostResponseDto> responseDto = postService.getPostsInHobby(hobbyId);
 		return ResponseEntity.ok(responseDto);
 	}
 
