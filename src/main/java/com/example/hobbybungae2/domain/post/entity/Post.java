@@ -64,7 +64,6 @@ public class Post extends TimeStamp {
 	public void update(PostRequestDto requestDto, State state) {
 		this.title = requestDto.getTitle();
 		this.content = requestDto.getContent();
-		this.state = requestDto.getState();
 		setState(state);
 	}
 

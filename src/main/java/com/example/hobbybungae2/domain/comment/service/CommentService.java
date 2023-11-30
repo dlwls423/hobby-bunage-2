@@ -45,7 +45,6 @@ public class CommentService {
 		return new CommentResponseDto(saveComment);
 	}
 
-	@Transactional
 	public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, User user) {
 		Comment saveComment = getCommentById(commentId);
 		checkPost(saveComment, postId);
