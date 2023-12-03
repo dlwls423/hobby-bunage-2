@@ -2,39 +2,65 @@ package com.example.hobbybungae2.global_exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import jakarta.annotation.PostConstruct;
+import java.util.Arrays;
+import java.util.Locale;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 @Getter
 @JsonFormat(shape = Shape.OBJECT)
 public enum ErrorCode {
 	/* COMMON */
-	INVALID_PARAM(HttpStatus.BAD_REQUEST, "잘못된 형식의 입력값입니다."), //
+	INVALID_PARAM(HttpStatus.BAD_REQUEST, "invalid.input"),
 	/* USER */
-	NOT_FOUND_USER(HttpStatus.NOT_FOUND, "찾으시는 회원은 존재하지 않습니다."), //
-	NOT_MATCHING_USER(HttpStatus.FORBIDDEN, "해당 아이템의 소유자가 아니십니다."), //
-	DUPLICATED_USER(HttpStatus.CONFLICT, "동일한 아이디의 중복회원 존재합니다."), //
-	PASSWORD_CONFIRM_FAIL(HttpStatus.BAD_REQUEST, "재입력하신 비밀번호와 패스워드가 일치하지 않습니다."), //
+	NOT_FOUND_USER(HttpStatus.NOT_FOUND, "not.found.user"),
+	NOT_MATCHING_USER(HttpStatus.FORBIDDEN, "not.matching.user"),
+	DUPLICATED_USER(HttpStatus.CONFLICT, "duplicated.user"),
+	PASSWORD_CONFIRM_FAIL(HttpStatus.BAD_REQUEST, "not.matching.password"),
 	/* HOBBY CATEGORY */
-	DUPLICATED_HOBBY(HttpStatus.CONFLICT, "이미 존재하는 취미입니다."), //
-	NOT_FOUND_HOBBY(HttpStatus.NOT_FOUND, "선택하신 취미는 존재하지 않는 취미입니다."), //
-	CANNOT_DELETE_HOBBY(HttpStatus.BAD_REQUEST, "해당 취미는 삭제할 수 없습니다."), //
+	DUPLICATED_HOBBY(HttpStatus.CONFLICT, "duplicated.hobby"),
+	NOT_FOUND_HOBBY(HttpStatus.NOT_FOUND, "not.found.hobby"),
+	CANNOT_DELETE_HOBBY(HttpStatus.BAD_REQUEST, "cannot.delete.hobby"),
 	/* STATE */
-	NOT_FOUND_STATE(HttpStatus.NOT_FOUND, "선택하신 지역은 존재하지 않는 지역입니다."), //
+	NOT_FOUND_STATE(HttpStatus.NOT_FOUND, "not.found.state"),
 	/* POST */
-	NOT_FOUND_POST(HttpStatus.NOT_FOUND, "선택하신 번개글은 존재하지 않는 번개글입니다."), //
-	INVALID_POST_MODIFIER(HttpStatus.FORBIDDEN, "수정/삭제하시려는 번개글의 권한이 없습니다."), //
+	NOT_FOUND_POST(HttpStatus.NOT_FOUND, "not.found.post"),
+	INVALID_POST_MODIFIER(HttpStatus.FORBIDDEN, "invalid.post.modifier"),
 	/* COMMENT */
-	NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "선택하신 댓글은 존재하지 않는 댓글입니다."), //
-	INVALID_COMMENT_MODIFIER(HttpStatus.FORBIDDEN, "수정/삭제하시려는 댓글의 권한이 없습니다."), //
-	UNMATCHED_COMMENT_POST(HttpStatus.BAD_REQUEST, "작성하신 댓글은 해당 게시글의 댓글이 아닙니다."); //
+	NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "not.found.comment"),
+	INVALID_COMMENT_MODIFIER(HttpStatus.FORBIDDEN, "invalid.comment.modifier"),
+	UNMATCHED_COMMENT_POST(HttpStatus.BAD_REQUEST, "unmatched.comment.post");
 
 	private final HttpStatus code;
 
-	private final String message;
+	private String message;
 
 	ErrorCode(HttpStatus code, String message) {
 		this.code = code;
 		this.message = message;
+	}
+
+	@RequiredArgsConstructor
+	@Component
+	public static class ErrorReasonInjector {
+
+		private final MessageSource messageSource;
+
+//		@Value("${application.locale}")
+//		private String locale;
+
+		@PostConstruct
+		public void postConstruct() {
+			Arrays.stream(ErrorCode.values())
+				.forEach(errorcode -> errorcode.message = messageSource.getMessage(errorcode.message,null, Locale.getDefault()));
+		}
 	}
 }
